@@ -30,12 +30,12 @@ DROP TABLE IF EXISTS replies;
 CREATE TABLE replies (
     id INTEGER PRIMARY KEY,
     question_id INTEGER NOT NULL,
-    reply_id INTEGER NOT NULL,
-    author_id INTEGER NOT NULL,
+    reply_id INTEGER,
+    users_id INTEGER NOT NULL,
     body TEXT NOT NULL, 
     FOREIGN KEY (question_id) REFERENCES questions(id), 
     FOREIGN KEY (reply_id) REFERENCES replies(id),
-    FOREIGN KEY (author_id) REFERENCES users(id)
+    FOREIGN KEY (users_id) REFERENCES users(id)
 );
 
 DROP TABLE IF EXISTS question_likes;
@@ -66,4 +66,22 @@ INSERT INTO
     question_follows(user_id, question_id)
 VALUES
     ((SELECT id FROM users WHERE fname = 'Bob' AND lname = 'Barley'),
-    (SELECT id FROM questions WHERE title = 'Rokas personality'))
+    (SELECT id FROM questions WHERE title = 'Rokas personality')); 
+
+INSERT INTO
+        replies(user_id, question_id, reply_id, body)
+VALUES 
+    ((SELECT id FROM users WHERE fname = 'KYLE' AND lname = 'GINZBURG'), 
+    (SELECT id FROM questions WHERE title = 'Rokas personality'), 
+    (SELECT id FROM replies WHERE reply_id is NULL ), 'This dude is too short to even measure.'), 
+
+    ((SELECT id FROM users WHERE fname = 'Eugene' AND lname = 'Neil'), 
+    (SELECT id FROM questions WHERE title = 'Rokas personality'),
+    (SELECT id FROM replies WHERE reply_id = 1 ), 'I think he is about 7 feet long'),
+
+    ((SELECT id FROM users WHERE fname = 'Bob' AND lname = 'Barley'),
+    (SELECT id FROM questions WHERE title = 'Rokas personality'),
+    (SELECT id FROM replies WHERE reply_id = 2 ), 'Anyone getting lunch?');
+
+
+
