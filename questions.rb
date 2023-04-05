@@ -92,10 +92,10 @@ class Question
 				*
 			FROM
 				questions
-			INNER JOIN users
-            	ON questions.user_id = users.id
+			INNER JOIN 
+				users ON questions.user_id = users.id
 			WHERE
-				 = ? 
+				 questions.id = ? 
 		SQL
 		data.map { |datum| User.new(datum) }
 	end 	
