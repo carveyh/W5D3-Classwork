@@ -99,6 +99,11 @@ class Question
 		SQL
 		data.map { |datum| User.new(datum) }
 	end 	
+
+	def replies
+		Reply.find_by_question_id(self.id)
+	end 
+
 end
 
 class Reply
@@ -146,6 +151,58 @@ class Reply
 		@parent_id = options['parent_id']
 		@body = options['body']
 	end
+
+	def author 
+		data = QuestionsDatabase.instance.execute(<<-SQL, self.id)
+		    SELECT
+                *
+            FROM
+                replies
+			INNER JOIN 
+                users ON replies.user_id = users.id
+            WHERE
+			    replies.id = ?
+            SQL
+			data.map { |datum| User.new(datum) }
+	end
+	
+	def question 
+		data = QuestionsDatabase.instance.execute(<<-SQL, self.id)
+			SELECT
+                *
+            FROM
+                replies 
+			INNER JOIN 
+                questions ON replies.question_id = questions.id
+            WHERE
+			    replies.id =?
+            SQL
+			data.map { |datum| Question.new(datum) }
+	end 
+
+	def parent_reply 
+		data = QuestionsDatabase.instance.execute(<<-SQL, self.parent_id)
+		    SELECT
+                *
+            FROM
+                replies
+            WHERE
+			    id =?
+            SQL
+			data.map { |datum| Reply.new(datum) }
+    end 
+
+    def child_replies 
+		data = QuestionsDatabase.instance.execute(<<-SQL, self.id)
+		    SELECT
+                *
+            FROM
+                replies
+            WHERE
+			    id =?
+            SQL
+			data.map { |datum| Reply.new(datum) }
+	end 
 
 end
 
