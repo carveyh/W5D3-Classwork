@@ -73,22 +73,40 @@ VALUES
     ((SELECT id FROM users WHERE fname = 'Bob' AND lname = 'Barley'),
     (SELECT id FROM questions WHERE title = 'Rokas personality')); 
 
+-------------
+
 INSERT INTO
-        replies(user_id, question_id, parent_id, body)
+    replies(user_id, question_id, parent_id, body)
 VALUES 
-    (((SELECT id FROM users WHERE fname = 'KYLE' AND lname = 'GINZBURG'), 
+    ((SELECT id FROM users WHERE fname = 'KYLE' AND lname = 'GINZBURG'), 
     (SELECT id FROM questions WHERE title = 'Rokas personality'), 
-    (SELECT id FROM replies WHERE parent_id IS NULL ), 
-    'This dude is too short to even measure.'), 
+    NULL,
+    'This dude is too short to even measure.'); 
 
-    ((SELECT id FROM users WHERE fname = 'Eugene' AND lname = 'Neil'), 
-    (SELECT id FROM questions WHERE title = 'Rokas personality'),
-    (SELECT id FROM replies WHERE parent_id = 1 ), 
-    'I think he is about 7 feet long'),
+INSERT INTO
+    replies(user_id, question_id, parent_id, body)
+VALUES 
+    (
+        (SELECT id FROM users WHERE fname = 'Eugene' AND lname = 'Neil'), 
+        (SELECT id FROM questions WHERE title = 'Rokas personality'),
+        ((SELECT id FROM replies WHERE parent_id IS NULL)), 
+        'I think he is about 7 feet long'
+    );
 
-    ((SELECT id FROM users WHERE fname = 'Bob' AND lname = 'Barley'),
-    (SELECT id FROM questions WHERE title = 'Rokas personality'),
-    (SELECT id FROM replies WHERE parent_id = 2 ), 'Anyone getting lunch?'));
+INSERT INTO
+    replies(user_id, question_id, parent_id, body)
+VALUES 
+    (
+        (SELECT id FROM users WHERE fname = 'Bob' AND lname = 'Barley'),
+        (SELECT id FROM questions WHERE title = 'Rokas personality'),
+        (SELECT id FROM replies WHERE parent_id = 1 ), 
+        'Anyone getting lunch?'
+    );
 
-
-
+INSERT INTO
+    question_likes(user_id, question_id)
+VALUES 
+    (
+        (SELECT id FROM users WHERE fname = 'Arthur' AND lname = 'Miller'),
+        (SELECT id FROM questions WHERE title = 'Rokas personality')
+    );
