@@ -4,6 +4,7 @@ GEM
     sqlite3 (1.6.2-arm64-darwin)
 
 PLATFORMS
+  arm64-darwin-21
   arm64-darwin-22
 
 DEPENDENCIES
