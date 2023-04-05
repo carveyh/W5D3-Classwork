@@ -22,7 +22,7 @@ class User
 		FROM users
         WHERE id = ?  
 		SQL
-		data.map { |datum| Question.new(datum) }
+		data.map { |datum| User.new(datum) }
 	end
 
 	def self.find_by_name(fname, lname)
@@ -34,7 +34,7 @@ class User
 		WHERE 
 			fname = ? AND lname = ?
 		SQL
-		data.map { |datum| Question.new(datum) }
+		data.map { |datum| User.new(datum) }
 	end
 
 	def initialize(options)
@@ -46,6 +46,11 @@ class User
 	def authored_questions
 		Question.find_by_author_id(self.id)
 	end
+
+	def authored_replies
+		Reply.find_by_user_id(self.id)
+	end 
+
 end
 
 class Question
@@ -80,6 +85,20 @@ class Question
 		@body = options['body']
 		@user_id = options['user_id']
 	end
+
+	def author 
+		data = QuestionsDatabase.instance.execute(<<-SQL,self.id)
+			SELECT
+				*
+			FROM
+				questions
+			INNER JOIN users
+            	ON questions.user_id = users.id
+			WHERE
+				 = ? 
+		SQL
+		data.map { |datum| User.new(datum) }
+	end 	
 end
 
 class Reply
@@ -93,7 +112,7 @@ class Reply
 		FROM replies
         WHERE id = ?  
 		SQL
-		data.map { |datum| Question.new(datum) }
+		data.map { |datum| Reply.new(datum) }
 	end
 
 	def self.find_by_user_id(user_id)
@@ -105,7 +124,7 @@ class Reply
 			WHERE
 				user_id = ?
 		SQL
-		data.map { |datum| Question.new(datum) }
+		data.map { |datum| Reply.new(datum) }
 	end
 
 	def self.find_by_question_id(question_id)
@@ -117,7 +136,7 @@ class Reply
 			WHERE
 				question_id = ?
 		SQL
-		data.map { |datum| Question.new(datum) }
+		data.map { |datum| Reply.new(datum) }
 	end
 
 	def initialize(options)
@@ -141,7 +160,7 @@ class QuestionLike
 		FROM question_likes
         WHERE id = ?  
 		SQL
-		data.map { |datum| Question.new(datum) }
+		data.map { |datum| QuestionLike.new(datum) }
 	end
 	
 	def initialize(options)
@@ -163,7 +182,7 @@ class QuestionFollow
 		FROM question_follows
         WHERE id = ?  
 		SQL
-		data.map { |datum| Question.new(datum) }
+		data.map { |datum| QuestionFollow.new(datum) }
 	end
 
 	def initialize(options)
