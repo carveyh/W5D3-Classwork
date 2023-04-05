@@ -241,12 +241,24 @@ class QuestionFollow
 		SQL
 		data.map { |datum| QuestionFollow.new(datum) }
 	end
+	
+	def self.followers_for_question_id(question_id) 
+		data = QuestionsDatabase.instance.execute(<<-SQL, question_id)
+		SELECT 
+			*
+        FROM question_follows
+		INNER JOIN users ON users.id = question_follows.user_id
+		WHERE question_id = ? 
+        SQL
+		data.map { |datum| User.new(datum) }
+	end 
 
 	def initialize(options)
         @id = options['id']
 		@user_id = options['user_id']
 		@question_id = options['question_id']
 	end 
+
 
 end
 
