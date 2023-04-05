@@ -37,3 +37,33 @@ CREATE TABLE replies (
     FOREIGN KEY (reply_id) REFERENCES replies(id),
     FOREIGN KEY (author_id) REFERENCES users(id)
 );
+
+DROP TABLE IF EXISTS question_likes;
+CREATE TABLE question_likes (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    question_id INTEGER NOT NULL
+);
+
+INSERT INTO
+  users (fname, lname)
+VALUES
+  ('Arthur', 'Miller'),
+  ('Bob', 'Barley'),
+  ('Rokas', 'Jeriomenkos'),
+  ('KYLE', 'GINZBURG'),
+  ('Eugene', 'Neil');
+
+INSERT INTO
+  questions (title, body, user_id)
+VALUES
+  ('Meaning of Life', 'What is the meaning of life?', 
+    (SELECT id FROM users WHERE fname = 'Arthur' AND lname = 'Miller')),
+    ('Rokas personality', 'How tall do you think I am?',
+    (SELECT id FROM users WHERE fname = 'Rokas' AND lname = 'Jeriomenkos'));
+
+INSERT INTO
+    question_follows(user_id, question_id)
+VALUES
+    ((SELECT id FROM users WHERE fname = 'Bob' AND lname = 'Barley'),
+    (SELECT id FROM questions WHERE title = 'Rokas personality'))
