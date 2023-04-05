@@ -121,7 +121,7 @@ class Reply
 	end
 
 	def self.find_by_user_id(user_id)
-		data = QuestionsDatabase.instance.execute(<<-SQL, user_id) 
+		data = QuestionsDatabase.instance.execute(<<-SQL, user_id)
 			SELECT
 				*
 			FROM
@@ -181,27 +181,27 @@ class Reply
 	end 
 
 	def parent_reply 
-		data = QuestionsDatabase.instance.execute(<<-SQL, self.parent_id)
+		data = QuestionsDatabase.instance.execute(<<-SQL, parent_id)
 		    SELECT
-                *
-            FROM
-                replies
-            WHERE
-			    id =?
-            SQL
-			data.map { |datum| Reply.new(datum) }
-    end 
+					*
+				FROM
+					replies
+				WHERE
+			    id = ?
+		SQL
+		data.map { |datum| Reply.new(datum) }
+	end 
 
-    def child_replies 
+	def child_replies 
 		data = QuestionsDatabase.instance.execute(<<-SQL, self.id)
 		    SELECT
-                *
-            FROM
-                replies
-            WHERE
-			    id =?
-            SQL
-			data.map { |datum| Reply.new(datum) }
+						*
+				FROM
+						replies
+				WHERE
+			    parent_id = ?
+		SQL
+		data.map { |datum| Reply.new(datum) }
 	end 
 
 end
