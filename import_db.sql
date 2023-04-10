@@ -66,19 +66,12 @@ VALUES
     (SELECT id FROM users WHERE fname = 'Arthur' AND lname = 'Miller')),
     ('Rokas personality', 'How tall do you think I am?',
     (SELECT id FROM users WHERE fname = 'Rokas' AND lname = 'Jeriomenkos'));
-
+    
 INSERT INTO
     question_follows(user_id, question_id)
 VALUES
     ((SELECT id FROM users WHERE fname = 'Bob' AND lname = 'Barley'),
-    (SELECT id FROM questions WHERE title = 'Rokas personality'));
-
-INSERT INTO
-    question_follows(user_id, question_id)
-VALUES
-    ((SELECT id FROM users WHERE fname = 'Rokas' AND lname = 'Jeriomenkos'),
     (SELECT id FROM questions WHERE title = 'Rokas personality')); 
-
 
 -------------
 
